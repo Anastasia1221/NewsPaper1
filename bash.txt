@@ -1,0 +1,77 @@
+1.
+from news.models import User
+user_1 = User.objects.create_user('user_1')
+user_2 = User.objects.create_user('user_2')
+
+2.
+from news.models import Author
+author_1 = Author.objects.create(user=user_1)
+author_2 = Author.objects.create(user=user_2)
+
+3.
+from news.models import Category
+cat_1 = Category.objects.create(theme='Sports')
+cat_2 = Category.objects.create(theme='Politics')
+cat_3 = Category.objects.create(theme='Education')
+cat_4 = Category.objects.create(theme='Technology')
+
+4.
+from news.models import Post
+art_1 = Post.objects.create(author=author_1, type='article', title='Article 1', text='Text for article 1')
+art_2 = Post.objects.create(author=author_2, type='article', title='Article 2', text='Text for article 2')
+news_1 = Post.objects.create(author=author_1, type='news', title='News 1', text='Text for news 1')
+
+5.
+from news.models import PostCategory
+PostCategory.objects.create(post=art_1, category=cat_2)
+PostCategory.objects.create(post=art_1, category=cat_3)
+PostCategory.objects.create(post=art_1, category=cat_4)
+PostCategory.objects.create(post=art_2, category=cat_1)
+PostCategory.objects.create(post=art_2, category=cat_3)
+PostCategory.objects.create(post=news_1, category=cat_2)
+PostCategory.objects.create(post=news_1, category=cat_4)
+
+6.
+from news.models import Comment
+com_1 = Comment.objects.create(post=art_1, user=user_1, text='Comment 1 for article 1')
+com_2 = Comment.objects.create(post=art_1, user=user_2, text='Comment 2 for article 1')
+com_3 = Comment.objects.create(post=art_2, user=user_1, text='Comment 3 for article 2')
+com_4 = Comment.objects.create(post=news_1, user=user_2, text='Comment 4 for news 1')
+
+7.
+art_1.like()
+art_1.like()
+art_1.dislike()
+art_2.like()
+art_2.dislike()
+news_1.dislike()
+com_1.like()
+com_2.dislike()
+com_3.like()
+com_4.like()
+
+8.
+author_1.update_rating()
+author_2.update_rating()
+
+9.
+best_user = Author.objects.filter().order_by('-rating').first()
+print(best_user.user.username)
+print(best_user.rating)
+
+10.
+best_article = Post.objects.filter(type='article').order_by('-rating').first()
+print(best_article.created_at)
+print(best_article.author.user.username)
+print(best_article.rating)
+print(best_article.title)
+print(best_article.prewiew())
+
+11.
+comments = Comment.objects.filter(post=best_article)
+for comment in comments:
+    print(comment.created_at)
+    print(comment.user.username)
+    print(comment.rating)
+    print(comment.text)
+
